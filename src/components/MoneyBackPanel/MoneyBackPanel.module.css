@@ -1,6 +1,6 @@
 .panel {
-  background-color: white;
-  border: 1px solid #e0e0e0;
+  background-color: #e3f2fd; /* ALTERADO: Cor de fundo azul claro igual ao da esquerda */
+  border: 1px solid #bbdefb; /* ALTERADO: Borda azul igual à da esquerda */
   border-radius: 8px;
   padding: 24px 16px;
   text-align: center;

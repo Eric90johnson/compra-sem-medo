@@ -1,10 +1,17 @@
 .bannerContainer {
-  /* Fundo degradê azul bem suave, parecido com a imagem */
-  background: linear-gradient(90deg, #bbdefb 0%, #e3f2fd 100%); 
+  /* ALTERADO: Fundo amarelo sólido para casar com o Header */
+  background: #fff159; 
   padding: 30px 20px;
   display: flex;
   justify-content: center;
+  /* ALTERADO: Borda superior bem fininha para separar levemente do Header */
+  border-top: 1px solid rgba(0,0,0,0.05);
   border-bottom: 1px solid #e0e0e0;
+  
+  /* Efeito Sticky (Pegajoso) no Topo */
+  position: sticky;
+  top: 0;
+  z-index: 100; 
 }
 
 .content {
@@ -12,7 +19,7 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  max-width: 1200px; /* Mantém o mesmo alinhamento do Header */
+  max-width: 1200px; 
 }
 
 .textSection h2 {
@@ -31,7 +38,7 @@
 }
 
 .timer {
-  background-color: #ff3d00; /* Cor de urgência para chamar atenção */
+  background-color: #ff3d00; 
   color: white;
   padding: 4px 10px;
   border-radius: 4px;

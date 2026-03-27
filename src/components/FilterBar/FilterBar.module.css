@@ -1,0 +1,110 @@
+.filterBar {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  padding: 10px 0;
+  text-align: left;
+  max-width: 200px; /* Travando a largura para não empurrar os produtos */
+}
+
+.mainTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 10px 0; /* Ajustado para o estado inicial */
+}
+
+/*resultsCount removido para o estado inicial*/
+
+.filterSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-bottom: 1px solid #eee; /* Linha sutil separadora entre grupos */
+  padding-bottom: 15px;
+}
+
+.filterTitle {
+  font-size: 0.95rem;
+  color: #333;
+  font-weight: 600;
+  margin: 0;
+}
+
+.filterList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filterList li a {
+  text-decoration: none;
+  color: #666;
+  font-size: 0.85rem;
+  transition: color 0.2s;
+}
+
+.filterList li a:hover {
+  color: #1565c0;
+}
+
+.showMore {
+  font-size: 0.8rem;
+  color: #3483fa; /* Azul padrão do Mercado Livre */
+  text-decoration: none;
+  margin-top: 5px;
+}
+
+.priceInputs {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.priceInput {
+  width: 65px;
+  padding: 6px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.75rem;
+}
+
+.applyButton {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  color: #1565c0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.toggleGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.toggleItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.toggleText {
+  color: #666;
+}
+
+.freeShipping {
+  color: #00a650;
+  font-weight: 600;
+}

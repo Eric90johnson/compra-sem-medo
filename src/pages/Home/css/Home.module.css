@@ -2,28 +2,96 @@
 .pageContainer {
   background-color: #f5f5f5;
   min-height: 100vh;
+  padding-bottom: 120px; /* Adicionado respiro no final da página para o conteúdo não ficar escondido atrás do banner fixo */
 }
 
 .contentWrapper {
-  max-width: 1200px;
+  max-width: 1250px; 
   margin: 0 auto;
   padding: 20px;
   display: grid;
-  /* ALTERADO: Colunas laterais reduzidas de 250px para 230px para dar mais espaço e respiro para a grade do meio */
-  grid-template-columns: 230px 1fr 230px;
+  /* ALTERADO: Estrutura de 5 colunas para separar Filtros, Produtos, Segurança, Linha e AdSense */
+  grid-template-columns: 200px minmax(0, 1fr) 200px 3px 200px;
   gap: 20px;
+}
+
+/* Embrulha a Barra de Filtros e os Cartões para ficarem na mesma coluna central */
+.middleColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .productsGrid {
   display: grid;
-  /* ALTERADO: Adicionado minmax(0, 1fr) no lugar de 1fr para evitar que os cartões "estourem" a grade e se sobreponham */
+  width: 100%; 
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
 }
 
-/* Colunas laterais temporárias só para você ver a divisão */
+/* Coluna lateral esquerda (Filtros) */
 .sideColumn {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  position: sticky;
+  top: 180px; 
+  align-self: start; 
+}
+
+/* <-- NOVA CLASSE: Coluna para os painéis de segurança à direita da vitrine --> */
+.securityColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: sticky;
+  top: 180px;
+  align-self: start;
+}
+
+/* O estilo da linha azul contínua entre Segurança e AdSense */
+.separatorLine {
+  background-color: #1565c0;
+  width: 100%;
+  border-radius: 2px;
+}
+
+/* <-- NOVA CLASSE: Coluna exclusiva para o AdSense na ponta direita --> */
+.adColumn {
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 180px; 
+  align-self: start; 
+}
+
+/* O container do banner fixo de rodapé */
+.stickyFooterAd {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1); 
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; 
+  border-top: 1px solid #e0e0e0;
+}
+
+/* O formato padrão de banner horizontal do AdSense */
+.stickyAdContent {
+  width: 100%;
+  max-width: 728px; 
+  height: 90px;
+  background-color: #f0f0f0;
+  border: 1px dashed #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #666;
+  font-weight: bold;
+  border-radius: 4px;
 }

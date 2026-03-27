@@ -1,6 +1,15 @@
 import styles from './Header.module.css';
 
-export function Header() {
+// ALTERADO: Adicionada a prop onSearch para comunicar a busca com o componente Home
+export function Header({ onSearch }) {
+
+  // NOVA FUNÇÃO: Captura o pressionamento de tecla e dispara a busca se for "Enter"
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter' && event.target.value.trim() !== "") {
+      onSearch(event.target.value);
+    }
+  };
+
   return (
     <header className={styles.header}>
       <div className={styles.topContainer}>
@@ -23,8 +32,11 @@ export function Header() {
       <div className={styles.searchContainer}>
         <input 
           type="text" 
-          placeholder="🔍 Busque um produto seguro..." 
+          /* ALTERADO: Placeholder atualizado para um tom mais profissional */
+          placeholder="Busque marcas, produtos e muito mais..." 
           className={styles.searchInput}
+          /* ADICIONADO: Evento para detectar quando o usuário termina de digitar */
+          onKeyDown={handleKeyDown}
         />
       </div>
     </header>

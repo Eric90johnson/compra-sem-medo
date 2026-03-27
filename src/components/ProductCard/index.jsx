@@ -39,7 +39,7 @@ export function ProductCard({ image, title, originalPrice, price, discount, stor
       </div>
 
       {/* Botão de Ação - A grande chamada estratégica */}
-      <button className={styles.buyButton}>COMPRAR NO MERCADO LIVRE</button>
+      <button className={styles.buyButton}>COMPRAR NO<br/>MERCADO LIVRE</button>
     </div>
   );
 }

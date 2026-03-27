@@ -1,0 +1,67 @@
+.paginationContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  padding: 16px 20px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  margin-top: 8px; /* Dá um leve respiro da grade de produtos */
+  flex-wrap: wrap; /* Se a tela encolher, eles se ajustam lindamente */
+  gap: 16px;
+}
+
+.itemsPerPage {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: #444;
+  font-weight: 500;
+}
+
+.select {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  outline: none;
+  cursor: pointer;
+  background-color: #f9f9f9;
+}
+
+.pageControls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.pageButton {
+  background-color: transparent;
+  border: 1px solid #1565c0; /* Azul do tema principal */
+  color: #1565c0;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pageButton:hover:not(:disabled) {
+  background-color: #e3f2fd; /* Azul clarinho de hover */
+}
+
+/* Estilo para quando não houver página anterior (desabilitado) */
+.pageButton:disabled {
+  border-color: #ccc;
+  color: #999;
+  cursor: not-allowed;
+  background-color: transparent;
+}
+
+.pageInfo {
+  font-size: 0.9rem;
+  color: #333;
+  font-weight: 600;
+}
