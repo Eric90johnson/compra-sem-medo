@@ -1,0 +1,66 @@
+.header {
+  background-color: #1565c0; /* Azul escuro que passa confiança */
+  color: white;
+  padding: 20px;
+  font-family: sans-serif;
+}
+
+.topContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative; /* ALTERADO: Necessário para alinhar o menu perfeitamente no centro */
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.shieldIcon {
+  font-size: 2.5rem;
+}
+
+.logo h1 {
+  font-size: 1.2rem;
+  line-height: 1.1;
+  margin: 0;
+}
+
+.nav {
+  display: flex;
+  gap: 24px;
+  position: absolute; /* ALTERADO: Centraliza o menu... */
+  left: 50%; /* ALTERADO: ...independente do tamanho do logo... */
+  transform: translateX(-50%); /* ALTERADO: ...ficando exatamente no meio da tela */
+}
+
+.nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+.nav a:hover {
+  opacity: 0.8;
+}
+
+.searchContainer {
+  max-width: 800px;
+  margin: 20px auto 0;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 14px 20px;
+  border-radius: 8px;
+  border: none;
+  font-size: 1rem;
+  outline: none;
+  background-color: #f0f0f0; /* ALTERADO: Fundo cinza bem claro */
+  color: #111111; /* ALTERADO: Letras pretas */
+}

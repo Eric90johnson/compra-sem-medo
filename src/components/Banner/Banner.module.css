@@ -1,0 +1,52 @@
+.bannerContainer {
+  /* Fundo degradê azul bem suave, parecido com a imagem */
+  background: linear-gradient(90deg, #bbdefb 0%, #e3f2fd 100%); 
+  padding: 30px 20px;
+  display: flex;
+  justify-content: center;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px; /* Mantém o mesmo alinhamento do Header */
+}
+
+.textSection h2 {
+  color: #111;
+  font-size: 2.2rem;
+  line-height: 1.2;
+  margin: 0 0 10px 0;
+}
+
+.timerContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  color: #333;
+}
+
+.timer {
+  background-color: #ff3d00; /* Cor de urgência para chamar atenção */
+  color: white;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.imageSection {
+  display: flex;
+  gap: 20px;
+}
+
+.mockImage {
+  font-size: 3rem;
+  background: white;
+  border-radius: 8px;
+  padding: 10px 20px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}

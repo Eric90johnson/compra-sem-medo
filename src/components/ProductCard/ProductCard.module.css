@@ -1,0 +1,113 @@
+/* src/components/ProductCard/ProductCard.module.css */
+
+.card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 10px; /* ALTERADO: Reduzido de 12px para 10px */
+  width: 100%; /* ALTERADO: Substitui o max-width para o card preencher o espaço da grade */
+  min-width: 0; /* ALTERADO: Trava essencial para impedir que o cartão force o crescimento e esprema os vizinhos */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Empurra o botão para o final */
+  background: white;
+  position: relative; /* Necessário para posicionar o selo de desconto */
+  transition: box-shadow 0.3s ease; /* Efeito suave no hover */
+}
+
+/* Efeito de destaque quando o usuário passa o mouse */
+.card:hover {
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.discountTag {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #ff5252; /* Vermelho Urgência */
+  color: white;
+  padding: 2px 6px; /* ALTERADO: Reduzido ainda mais para não ocupar tanto espaço na foto */
+  border-radius: 4px;
+  font-size: 0.7rem; /* ALTERADO: Fonte levemente menor */
+  font-weight: bold;
+  z-index: 10;
+}
+
+.image {
+  width: 100%;
+  height: 100px; /* ALTERADO: Altura reduzida de 120px para 100px para o card respirar melhor */
+  object-fit: contain; /* Garante que a imagem não distorça */
+  margin-bottom: 10px; /* ALTERADO: Espaçamento reduzido */
+}
+
+.details {
+  flex-grow: 1; /* Faz esta parte ocupar o espaço disponível */
+  margin-bottom: 10px; /* ALTERADO: Espaçamento reduzido */
+}
+
+.storeTag {
+  color: #2962ff; /* Azul Confiança */
+  font-size: 0.7rem; /* ALTERADO: Fonte levemente menor */
+  font-weight: bold;
+  text-transform: uppercase;
+  margin: 0 0 4px 0;
+}
+
+.title {
+  font-size: 0.85rem; /* ALTERADO: Reduzido de 0.9rem para 0.85rem */
+  color: #333;
+  margin: 0 0 8px 0; /* ALTERADO: Reduzido de 12px para 8px */
+  font-weight: 500;
+  line-height: 1.3;
+  /* Limita o título a 2 linhas e coloca "..." se for maior */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.priceContainer {
+  display: flex;
+  flex-direction: column; /* ALTERADO: Empilha os valores um abaixo do outro */
+  align-items: flex-start; /* ALTERADO: Alinha os preços à esquerda */
+  gap: 2px; /* ALTERADO: Gap reduzido para aproximar o preço riscado do preço final */
+  margin-bottom: 8px;
+}
+
+.originalPrice {
+  color: #888;
+  text-decoration: line-through; /* Risca o preço antigo */
+  font-size: 0.8rem; /* ALTERADO: Fonte menor */
+}
+
+.currentPrice {
+  color: #00c853; /* Verde Seguro */
+  font-size: 1.05rem; /* ALTERADO: Reduzido de 1.15rem para 1.05rem */
+  font-weight: bold;
+}
+
+.trustInfo {
+  font-size: 0.75rem; /* ALTERADO: Fonte levemente menor */
+  color: #666;
+  margin: 0;
+  font-weight: 500;
+}
+
+.buyButton {
+  background-color: #00c853; /* Verde Seguro */
+  color: white;
+  border: none;
+  padding: 8px; /* ALTERADO: Reduzido de 10px para 8px */
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s;
+  font-size: 0.75rem; /* ALTERADO: Fonte reduzida para garantir o encaixe */
+  white-space: normal; /* ALTERADO: Permite que o texto do botão quebre linha e não quebre a grade */
+  line-height: 1.2;
+}
+
+.buyButton:hover {
+  background-color: #00a041; /* Verde mais escuro no hover */
+}

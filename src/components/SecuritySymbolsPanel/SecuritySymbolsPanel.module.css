@@ -1,0 +1,21 @@
+.panel {
+  background-color: #e3f2fd; /* ALTERADO: Mesma cor de fundo do painel Só Lojas Oficiais */
+  border: 1px solid #bbdefb; /* ALTERADO: Adicionada a mesma borda do painel superior */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02); /* ALTERADO: Adicionada a mesma sombra */
+  border-radius: 8px;
+  padding: 24px 16px;
+  margin-top: 16px;
+}
+.title {
+  color: #111;
+  font-size: 1.1rem;
+  margin: 0 0 10px 0;
+}
+.highlight {
+  color: #1565c0;
+}
+.text {
+  font-size: 0.85rem;
+  color: #444;
+  line-height: 1.4;
+}

@@ -1,0 +1,29 @@
+/* src/pages/Home/css/Home.module.css */
+.pageContainer {
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+.contentWrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  display: grid;
+  /* ALTERADO: Colunas laterais reduzidas de 250px para 230px para dar mais espaço e respiro para a grade do meio */
+  grid-template-columns: 230px 1fr 230px;
+  gap: 20px;
+}
+
+.productsGrid {
+  display: grid;
+  /* ALTERADO: Adicionado minmax(0, 1fr) no lugar de 1fr para evitar que os cartões "estourem" a grade e se sobreponham */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+/* Colunas laterais temporárias só para você ver a divisão */
+.sideColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
