@@ -29,26 +29,17 @@ export function Home() {
   async function fetchProducts() {
     setLoading(true);
     try {
-      console.log("🔍 Buscando Curadoria VIP DIRETAMENTE da API Pública...");
-
-      // Endpoint seguro que não exige Token e não dá 403
-      let url = `https://api.mercadolibre.com/items?ids=${curatedIds}`;
-
-      const response = await fetch(url);
+      // Chamamos a nossa própria API segura da Vercel
+      const response = await fetch('/api/items');
       
-      if (!response.ok) {
-        throw new Error(`Erro: ${response.status}`);
-      }
+      if (!response.ok) throw new Error(`Erro: ${response.status}`);
 
       const data = await response.json();
       
-      // A API de itens devolve uma estrutura diferente: um array com { code, body }
       if (data && data.length > 0) {
         const formattedProducts = data.map(item => {
           const produto = item.body;
-          
-          // Tratamento para caso algum ID seja inválido
-          if (!produto.id) return null;
+          if (!produto || !produto.id) return null;
 
           return {
             id: produto.id,
@@ -57,20 +48,15 @@ export function Home() {
             originalPrice: produto.original_price,
             price: produto.price,
             discount: produto.original_price ? Math.round(((produto.original_price - produto.price) / produto.original_price) * 100) : null,
-            storeName: "Loja Oficial", // Como é curadoria, assumimos que você escolheu lojas oficiais
+            storeName: "Loja Oficial",
             permalink: produto.permalink
           };
-        }).filter(Boolean); // Remove qualquer item nulo
+        }).filter(Boolean);
 
         setProducts(formattedProducts);
-      } else {
-        setProducts([]); 
       }
-
-      setCurrentPage(1); 
     } catch (error) {
-      console.error("Erro ao carregar vitrine VIP:", error);
-      setProducts([]); 
+      console.error("Erro na vitrine:", error);
     } finally {
       setLoading(false);
     }
