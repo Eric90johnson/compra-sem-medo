@@ -21,15 +21,20 @@ export function Home() {
   async function fetchProducts(query) {
     setLoading(true);
     try {
-      // --- ALTERAÇÃO: O token foi removido do Front-End por segurança! ---
-      console.log("🔍 Buscando produtos através do novo Backend Seguro...");
+      console.log("🔍 Buscando produtos DIRETAMENTE do Mercado Livre (Pelo Navegador)...");
 
-      // --- ALTERAÇÃO: Agora chamamos a nossa própria API Serverless (/api/search) ---
-      const response = await fetch(`/api/search?q=${query}`);
+      // --- A SOLUÇÃO DEFINITIVA ---
+      // Como a API permite buscas públicas de conexões residenciais, fazemos a chamada direta.
+      // Sem tokens, sem Vercel Backend, sem bloqueios de IP.
+      let url = `https://api.mercadolibre.com/sites/MLB/search?q=${query}`;
+      if (query === 'tecnologia') {
+        url = `https://api.mercadolibre.com/sites/MLB/search?category=MLB1648`;
+      }
+
+      // Requisição 100% limpa, feita pelo próprio computador do usuário que acessar o site
+      const response = await fetch(url);
       
       if (!response.ok) {
-        const erroApi = await response.json();
-        console.error("❌ Erro na API Interna:", erroApi);
         throw new Error(`Erro: ${response.status}`);
       }
 
@@ -44,7 +49,6 @@ export function Home() {
           price: item.price,
           discount: item.original_price ? Math.round(((item.original_price - item.price) / item.original_price) * 100) : null,
           storeName: item.official_store_name || "Vendedor Verificado",
-          // --- NOVA LINHA: Pegando o link real do produto para o botão de afiliado ---
           permalink: item.permalink
         }));
 
@@ -98,7 +102,7 @@ export function Home() {
                 ))
               ) : (
                 <div style={{ textAlign: 'center', gridColumn: 'span 3', padding: '20px' }}>
-                  <p>Nenhum produto encontrado. Aguardando a conexão com o servidor Backend.</p>
+                  <p>Nenhum produto encontrado.</p>
                 </div>
               )}
             </section>
