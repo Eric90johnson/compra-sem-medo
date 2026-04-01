@@ -17,13 +17,20 @@ export function Home() {
   const [products, setProducts] = useState([]); 
   const [loading, setLoading] = useState(true); 
 
-  // --- ESTRATÉGIA: CURADORIA PREMIUM (VIA BACKEND SEGURO) ---
+  // --- ESTRATÉGIA FINAL: CURADORIA VIP DIRETO NO FRONTEND ---
+  const curatedIds = [
+    'MLB3437775983', 'MLB3350711915', 'MLB3856116838', 'MLB3403323049',
+    'MLB4317056020', 'MLB3462947110', 'MLB3421060935', 'MLB3446864501'
+  ].join(',');
+
   async function fetchProducts() {
     setLoading(true);
     try {
-      console.log("🔍 Solicitando Curadoria VIP ao servidor...");
+      console.log("🔍 Buscando Curadoria VIP DIRETAMENTE da API do Mercado Livre...");
 
-      const response = await fetch('/api/items');
+      // Mudança de Mestre: A chamada é feita direto do navegador do usuário
+      // O ML entende que é uma pessoa real e permite o acesso aos itens públicos!
+      const response = await fetch(`https://api.mercadolibre.com/items?ids=${curatedIds}`);
       
       if (!response.ok) throw new Error(`Erro na API: ${response.status}`);
 
@@ -33,7 +40,6 @@ export function Home() {
         const formattedProducts = data.map(item => {
           const produto = item.body;
           
-          // --- ALTERAÇÃO: Agora verificamos se o produto tem ID e PREÇO ---
           if (!produto || !produto.id || produto.price === undefined) return null;
 
           return {
