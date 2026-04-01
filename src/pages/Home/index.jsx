@@ -23,23 +23,18 @@ export function Home() {
     try {
       console.log("🔍 Solicitando Curadoria VIP ao servidor...");
 
-      // Chamamos a nossa própria API segura da Vercel
       const response = await fetch('/api/items');
       
-      if (!response.ok) {
-        throw new Error(`Erro na API: ${response.status}`);
-      }
+      if (!response.ok) throw new Error(`Erro na API: ${response.status}`);
 
       const data = await response.json();
       
-      // --- ALTERAÇÃO DE SEGURANÇA (Anti-Tela Branca) ---
-      // Verificamos se 'data' é realmente um Array antes de tentar usar o .map()
       if (data && Array.isArray(data) && data.length > 0) {
         const formattedProducts = data.map(item => {
           const produto = item.body;
           
-          // Se o Mercado Livre não devolver o corpo do produto, ignoramos esse item
-          if (!produto || !produto.id) return null;
+          // --- ALTERAÇÃO: Agora verificamos se o produto tem ID e PREÇO ---
+          if (!produto || !produto.id || produto.price === undefined) return null;
 
           return {
             id: produto.id,
@@ -51,11 +46,10 @@ export function Home() {
             storeName: "Loja Oficial",
             permalink: produto.permalink
           };
-        }).filter(Boolean); // Remove os itens que retornaram null
+        }).filter(Boolean); 
 
         setProducts(formattedProducts);
       } else {
-        console.warn("⚠️ A API não retornou uma lista de produtos válida.");
         setProducts([]); 
       }
 
@@ -71,7 +65,6 @@ export function Home() {
     fetchProducts();
   }, []);
 
-  // Lógica de Paginação (Protegida contra valores negativos ou nulos)
   const indexOfLastProduct = Math.max(currentPage * itemsPerPage, 0);
   const indexOfFirstProduct = Math.max(indexOfLastProduct - itemsPerPage, 0);
   const displayedProducts = Array.isArray(products) ? products.slice(indexOfFirstProduct, indexOfLastProduct) : [];

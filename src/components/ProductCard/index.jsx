@@ -5,8 +5,10 @@ import styles from './ProductCard.module.css';
 // --- ALTERAÇÃO: Adicionamos a propriedade 'permalink' ---
 export function ProductCard({ image, title, originalPrice, price, discount, storeName, permalink }) {
   
-  // Lógica simples para formatar os preços em Real (BRL)
+  // --- ALTERAÇÃO DE SEGURANÇA: Lógica protegida para formatar os preços ---
   const formatPrice = (value) => {
+    // Se o valor não existir (undefined ou null), retorna um texto padrão em vez de quebrar o site
+    if (value === undefined || value === null) return 'Sob consulta';
     return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   };
 
