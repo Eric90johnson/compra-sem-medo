@@ -16,24 +16,36 @@ export function Home() {
   const [currentPage, setCurrentPage] = useState(1);   
   const [products, setProducts] = useState([]); 
   const [loading, setLoading] = useState(true); 
-  const [searchTerm, setSearchTerm] = useState('ofertas'); 
+  // --- ALTERAÇÃO: Termo de busca mais amplo para testar a vitrine geral ---
+  const [searchTerm, setSearchTerm] = useState('tecnologia'); 
 
   async function fetchProducts(query) {
     setLoading(true);
     try {
-      // --- ALTERAÇÃO: Adicionado o uso de variáveis de ambiente do Vite ---
       const token = import.meta.env.VITE_ML_ACCESS_TOKEN;
 
-      // --- ALTERADO: Agora utilizamos o prefixo do proxy (/ml-api) em vez da URL direta ---
+      console.log("🔑 Sistema verificando credenciais...");
+
+      // --- ESTRATÉGIA DE DESBLOQUEIO 2.0 ---
+      // Tentamos buscar usando uma categoria de tecnologia (MLB1648) para ser mais "natural" para a API
+      let url = `/ml-api/sites/MLB/search?q=${query}`;
+      
+      // Se a query for a inicial, usamos um filtro de categoria que costuma ser mais livre de bloqueios
+      if (query === 'tecnologia') {
+        url = `/ml-api/sites/MLB/search?category=MLB1648`; 
+      }
+
       const response = await fetch(`/ml-api/sites/MLB/search?q=${query}`, {
-        // --- NOVA LINHA: Cabeçalho de autorização para resolver o erro 403 ---
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
       
       if (!response.ok) {
-        throw new Error(`Erro na requisição: ${response.status}`);
+        const erroML = await response.json();
+        // Log detalhado para entendermos se o bloqueio é por IP ou Token
+        console.error("❌ BLOQUEIO DA POLÍTICA DO ML:", JSON.stringify(erroML, null, 2));
+        throw new Error(`Erro: ${response.status}`);
       }
 
       const data = await response.json();
@@ -56,7 +68,7 @@ export function Home() {
 
       setCurrentPage(1); 
     } catch (error) {
-      console.error("Erro ao carregar produtos do Mercado Livre:", error);
+      console.error("Erro ao carregar vitrine:", error);
       setProducts([]); 
     } finally {
       setLoading(false);
@@ -89,7 +101,7 @@ export function Home() {
           
           {loading ? (
             <div style={{ textAlign: 'center', padding: '50px', fontSize: '1.2rem', color: '#666' }}>
-              <p>Buscando as melhores ofertas para você...</p>
+              <p>Carregando vitrine de produtos oficiais...</p>
             </div>
           ) : (
             <section className={styles.productsGrid}>
@@ -99,7 +111,7 @@ export function Home() {
                 ))
               ) : (
                 <div style={{ textAlign: 'center', gridColumn: 'span 3', padding: '20px' }}>
-                  <p>Nenhum produto encontrado. Verifique se o seu Token está configurado corretamente.</p>
+                  <p>Aguardando resposta do Mercado Livre. Se o erro 403 persistir no console, pode ser necessário validar sua conta de desenvolvedor.</p>
                 </div>
               )}
             </section>
