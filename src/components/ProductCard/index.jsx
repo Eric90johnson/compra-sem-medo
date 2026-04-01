@@ -2,7 +2,8 @@
 import styles from './ProductCard.module.css';
 
 // Estamos definindo quais dados o cartão precisará receber
-export function ProductCard({ image, title, originalPrice, price, discount, storeName }) {
+// --- ALTERAÇÃO: Adicionamos a propriedade 'permalink' ---
+export function ProductCard({ image, title, originalPrice, price, discount, storeName, permalink }) {
   
   // Lógica simples para formatar os preços em Real (BRL)
   const formatPrice = (value) => {
@@ -39,7 +40,15 @@ export function ProductCard({ image, title, originalPrice, price, discount, stor
       </div>
 
       {/* Botão de Ação - A grande chamada estratégica */}
-      <button className={styles.buyButton}>COMPRAR NO<br/>MERCADO LIVRE</button>
+      {/* --- ALTERAÇÃO: Transformamos o <button> em uma tag <a> de link com atributos de segurança --- */}
+      <a 
+        href={permalink} 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        className={styles.buyButton}
+      >
+        COMPRAR NO<br/>MERCADO LIVRE
+      </a>
     </div>
   );
 }
