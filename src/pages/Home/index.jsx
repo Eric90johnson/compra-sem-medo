@@ -16,20 +16,18 @@ export function Home() {
   const [currentPage, setCurrentPage] = useState(1);   
   const [products, setProducts] = useState([]); 
   const [loading, setLoading] = useState(true); 
-  const [searchTerm, setSearchTerm] = useState('tecnologia'); 
+  
+  // --- ALTERAÇÃO: Trocamos o termo inicial para "ofertas" para ativar o algoritmo de mix do ML ---
+  const [searchTerm, setSearchTerm] = useState('ofertas'); 
 
   async function fetchProducts(query) {
     setLoading(true);
     try {
       console.log("🔍 Buscando produtos DIRETAMENTE do Mercado Livre (Pelo Navegador)...");
 
-      // --- A SOLUÇÃO DEFINITIVA ---
-      // Como a API permite buscas públicas de conexões residenciais, fazemos a chamada direta.
-      // Sem tokens, sem Vercel Backend, sem bloqueios de IP.
+      // --- A SOLUÇÃO DEFINITIVA (ABORDAGEM DO ALGORITMO) ---
+      // Apenas passamos a query limpa. Se for "ofertas", o ML trará os mais relevantes e vendidos.
       let url = `https://api.mercadolibre.com/sites/MLB/search?q=${query}`;
-      if (query === 'tecnologia') {
-        url = `https://api.mercadolibre.com/sites/MLB/search?category=MLB1648`;
-      }
 
       // Requisição 100% limpa, feita pelo próprio computador do usuário que acessar o site
       const response = await fetch(url);
