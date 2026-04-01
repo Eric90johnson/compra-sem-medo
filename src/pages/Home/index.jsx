@@ -17,28 +17,28 @@ export function Home() {
   const [products, setProducts] = useState([]); 
   const [loading, setLoading] = useState(true); 
 
-  // --- NOVA ESTRATÉGIA: CURADORIA PREMIUM ---
-  // Aqui você coloca os IDs dos 12 produtos mais vendidos (1 de cada categoria).
-  // Exemplo: O código que fica na URL do produto no ML (MLB...).
-  const curatedIds = [
-    'MLB3437775983', 'MLB3350711915', 'MLB3856116838', 'MLB3403323049',
-    'MLB4317056020', 'MLB3462947110', 'MLB3421060935', 'MLB3446864501',
-    'MLB3855523932', 'MLB3505680193', 'MLB3386016259', 'MLB3467645025'
-  ].join(',');
-
+  // --- ESTRATÉGIA: CURADORIA PREMIUM (VIA BACKEND SEGURO) ---
   async function fetchProducts() {
     setLoading(true);
     try {
+      console.log("🔍 Solicitando Curadoria VIP ao servidor...");
+
       // Chamamos a nossa própria API segura da Vercel
       const response = await fetch('/api/items');
       
-      if (!response.ok) throw new Error(`Erro: ${response.status}`);
+      if (!response.ok) {
+        throw new Error(`Erro na API: ${response.status}`);
+      }
 
       const data = await response.json();
       
-      if (data && data.length > 0) {
+      // --- ALTERAÇÃO DE SEGURANÇA (Anti-Tela Branca) ---
+      // Verificamos se 'data' é realmente um Array antes de tentar usar o .map()
+      if (data && Array.isArray(data) && data.length > 0) {
         const formattedProducts = data.map(item => {
           const produto = item.body;
+          
+          // Se o Mercado Livre não devolver o corpo do produto, ignoramos esse item
           if (!produto || !produto.id) return null;
 
           return {
@@ -51,31 +51,35 @@ export function Home() {
             storeName: "Loja Oficial",
             permalink: produto.permalink
           };
-        }).filter(Boolean);
+        }).filter(Boolean); // Remove os itens que retornaram null
 
         setProducts(formattedProducts);
+      } else {
+        console.warn("⚠️ A API não retornou uma lista de produtos válida.");
+        setProducts([]); 
       }
+
     } catch (error) {
-      console.error("Erro na vitrine:", error);
+      console.error("❌ Erro crítico ao carregar vitrine:", error);
+      setProducts([]); 
     } finally {
       setLoading(false);
     }
   }
 
   useEffect(() => {
-    // Agora não passamos mais searchTerm, ele busca direto a nossa lista VIP
     fetchProducts();
   }, []);
 
-  const indexOfLastProduct = currentPage * itemsPerPage;
-  const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
-  const displayedProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
+  // Lógica de Paginação (Protegida contra valores negativos ou nulos)
+  const indexOfLastProduct = Math.max(currentPage * itemsPerPage, 0);
+  const indexOfFirstProduct = Math.max(indexOfLastProduct - itemsPerPage, 0);
+  const displayedProducts = Array.isArray(products) ? products.slice(indexOfFirstProduct, indexOfLastProduct) : [];
 
-  const totalPages = Math.ceil(products.length / itemsPerPage);
+  const totalPages = itemsPerPage > 0 ? Math.ceil(products.length / itemsPerPage) : 0;
 
   return (
     <div className={styles.pageContainer}>
-      {/* Removemos temporariamente o onSearch do Header, já que a vitrine é fixa */}
       <Header onSearch={() => {}} />
 
       <Banner />
@@ -100,7 +104,7 @@ export function Home() {
                 ))
               ) : (
                 <div style={{ textAlign: 'center', gridColumn: 'span 3', padding: '20px' }}>
-                  <p>Nenhum produto encontrado. Verifique se os IDs no código estão corretos.</p>
+                  <p>Nenhum produto encontrado. Verifique a conexão com o servidor.</p>
                 </div>
               )}
             </section>
