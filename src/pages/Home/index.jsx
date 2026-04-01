@@ -16,20 +16,24 @@ export function Home() {
   const [currentPage, setCurrentPage] = useState(1);   
   const [products, setProducts] = useState([]); 
   const [loading, setLoading] = useState(true); 
-  
-  // --- ALTERAÇÃO: Trocamos o termo inicial para "ofertas" para ativar o algoritmo de mix do ML ---
-  const [searchTerm, setSearchTerm] = useState('ofertas'); 
 
-  async function fetchProducts(query) {
+  // --- NOVA ESTRATÉGIA: CURADORIA PREMIUM ---
+  // Aqui você coloca os IDs dos 12 produtos mais vendidos (1 de cada categoria).
+  // Exemplo: O código que fica na URL do produto no ML (MLB...).
+  const curatedIds = [
+    'MLB3437775983', 'MLB3350711915', 'MLB3856116838', 'MLB3403323049',
+    'MLB4317056020', 'MLB3462947110', 'MLB3421060935', 'MLB3446864501',
+    'MLB3855523932', 'MLB3505680193', 'MLB3386016259', 'MLB3467645025'
+  ].join(',');
+
+  async function fetchProducts() {
     setLoading(true);
     try {
-      console.log("🔍 Buscando produtos DIRETAMENTE do Mercado Livre (Pelo Navegador)...");
+      console.log("🔍 Buscando Curadoria VIP DIRETAMENTE da API Pública...");
 
-      // --- A SOLUÇÃO DEFINITIVA (ABORDAGEM DO ALGORITMO) ---
-      // Apenas passamos a query limpa. Se for "ofertas", o ML trará os mais relevantes e vendidos.
-      let url = `https://api.mercadolibre.com/sites/MLB/search?q=${query}`;
+      // Endpoint seguro que não exige Token e não dá 403
+      let url = `https://api.mercadolibre.com/items?ids=${curatedIds}`;
 
-      // Requisição 100% limpa, feita pelo próprio computador do usuário que acessar o site
       const response = await fetch(url);
       
       if (!response.ok) {
@@ -38,17 +42,25 @@ export function Home() {
 
       const data = await response.json();
       
-      if (data && data.results) {
-        const formattedProducts = data.results.map(item => ({
-          id: item.id,
-          title: item.title,
-          image: item.thumbnail ? item.thumbnail.replace(/\w\.jpg/g, 'W.jpg') : '', 
-          originalPrice: item.original_price,
-          price: item.price,
-          discount: item.original_price ? Math.round(((item.original_price - item.price) / item.original_price) * 100) : null,
-          storeName: item.official_store_name || "Vendedor Verificado",
-          permalink: item.permalink
-        }));
+      // A API de itens devolve uma estrutura diferente: um array com { code, body }
+      if (data && data.length > 0) {
+        const formattedProducts = data.map(item => {
+          const produto = item.body;
+          
+          // Tratamento para caso algum ID seja inválido
+          if (!produto.id) return null;
+
+          return {
+            id: produto.id,
+            title: produto.title,
+            image: produto.thumbnail ? produto.thumbnail.replace(/\w\.jpg/g, 'W.jpg') : '', 
+            originalPrice: produto.original_price,
+            price: produto.price,
+            discount: produto.original_price ? Math.round(((produto.original_price - produto.price) / produto.original_price) * 100) : null,
+            storeName: "Loja Oficial", // Como é curadoria, assumimos que você escolheu lojas oficiais
+            permalink: produto.permalink
+          };
+        }).filter(Boolean); // Remove qualquer item nulo
 
         setProducts(formattedProducts);
       } else {
@@ -57,7 +69,7 @@ export function Home() {
 
       setCurrentPage(1); 
     } catch (error) {
-      console.error("Erro ao carregar vitrine:", error);
+      console.error("Erro ao carregar vitrine VIP:", error);
       setProducts([]); 
     } finally {
       setLoading(false);
@@ -65,8 +77,9 @@ export function Home() {
   }
 
   useEffect(() => {
-    fetchProducts(searchTerm);
-  }, [searchTerm]);
+    // Agora não passamos mais searchTerm, ele busca direto a nossa lista VIP
+    fetchProducts();
+  }, []);
 
   const indexOfLastProduct = currentPage * itemsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
@@ -76,7 +89,8 @@ export function Home() {
 
   return (
     <div className={styles.pageContainer}>
-      <Header onSearch={setSearchTerm} />
+      {/* Removemos temporariamente o onSearch do Header, já que a vitrine é fixa */}
+      <Header onSearch={() => {}} />
 
       <Banner />
 
@@ -90,7 +104,7 @@ export function Home() {
           
           {loading ? (
             <div style={{ textAlign: 'center', padding: '50px', fontSize: '1.2rem', color: '#666' }}>
-              <p>Carregando vitrine de produtos oficiais...</p>
+              <p>Carregando as melhores ofertas do dia...</p>
             </div>
           ) : (
             <section className={styles.productsGrid}>
@@ -100,7 +114,7 @@ export function Home() {
                 ))
               ) : (
                 <div style={{ textAlign: 'center', gridColumn: 'span 3', padding: '20px' }}>
-                  <p>Nenhum produto encontrado.</p>
+                  <p>Nenhum produto encontrado. Verifique se os IDs no código estão corretos.</p>
                 </div>
               )}
             </section>
