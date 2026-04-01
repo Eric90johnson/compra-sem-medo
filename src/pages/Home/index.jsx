@@ -17,80 +17,80 @@ export function Home() {
   const [products, setProducts] = useState([]); 
   const [loading, setLoading] = useState(true); 
 
-  // --- ESTRATÉGIA BLINDADA: DADOS MOCKADOS (SIMULADOS) ---
-  // Sem depender da API do Mercado Livre, o site carrega rápido e nunca dá erro!
+  // --- ESTRATÉGIA BLINDADA: DADOS MOCKADOS ---
+  // DICA DE OURO: Para colocar seus produtos reais, vá no site do Mercado Livre, 
+  // clique com o botão direito na foto do produto, escolha "Copiar endereço da imagem"
+  // e cole aqui no campo "image". Faça o mesmo com o seu link de afiliado no campo "permalink".
   const mockProducts = [
     {
       id: 'MLB1',
       title: 'Smartphone Samsung Galaxy S23 5G 256GB Preto',
-      image: 'https://http2.mlstatic.com/D_NQ_NP_600608-MLU72646738912_112023-W.jpg', 
+      image: 'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=500&q=80', 
       originalPrice: 4500.00,
       price: 3799.00,
       discount: 15,
       storeName: 'Samsung',
-      permalink: 'https://www.mercadolivre.com.br/'
+      permalink: 'https://www.mercadolivre.com.br/' // Cole seu link de afiliado aqui!
     },
     {
       id: 'MLB2',
-      title: 'Smart TV 55 Polegadas 4K UHD LG',
-      image: 'https://http2.mlstatic.com/D_NQ_NP_735914-MLU70438316104_072023-W.jpg',
+      title: 'Smart TV 55 Polegadas 4K UHD',
+      image: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=500&q=80',
       originalPrice: 3200.00,
       price: 2499.00,
       discount: 21,
-      storeName: 'LG Oficial',
+      storeName: 'Loja Oficial',
       permalink: 'https://www.mercadolivre.com.br/'
     },
     {
       id: 'MLB3',
-      title: 'Notebook Ideapad Lenovo AMD Ryzen 5 8GB',
-      image: 'https://http2.mlstatic.com/D_NQ_NP_837319-MLU74272199656_012024-W.jpg',
+      title: 'Notebook Ideapad AMD Ryzen 5 8GB',
+      image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&q=80',
       originalPrice: 2800.00,
       price: 2199.00,
       discount: 21,
-      storeName: 'Lenovo',
+      storeName: 'Loja Oficial',
       permalink: 'https://www.mercadolivre.com.br/'
     },
     {
       id: 'MLB4',
-      title: 'Console PlayStation 5 825GB Branco Sony',
-      image: 'https://http2.mlstatic.com/D_NQ_NP_841787-MLA44484414455_012021-W.jpg',
+      title: 'Console Console 5 825GB Branco',
+      image: 'https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=500&q=80',
       originalPrice: 4499.00,
       price: 3999.00,
       discount: 11,
-      storeName: 'PlayStation',
+      storeName: 'Loja Oficial',
       permalink: 'https://www.mercadolivre.com.br/'
     },
     {
       id: 'MLB5',
-      title: 'Fritadeira Air Fryer Mondial 4L Inox',
-      image: 'https://http2.mlstatic.com/D_NQ_NP_767576-MLU72700511874_112023-W.jpg',
+      title: 'Fritadeira Air Fryer 4L Inox',
+      image: 'https://images.unsplash.com/photo-1626200419188-f142b99a4413?w=500&q=80',
       originalPrice: 499.00,
       price: 349.00,
       discount: 30,
-      storeName: 'Mondial',
+      storeName: 'Loja Oficial',
       permalink: 'https://www.mercadolivre.com.br/'
     },
     {
       id: 'MLB6',
-      title: 'Fone de Ouvido Bluetooth JBL Tune 520BT',
-      image: 'https://http2.mlstatic.com/D_NQ_NP_668270-MLU70044574932_062023-W.jpg',
+      title: 'Fone de Ouvido Bluetooth Sem Fio',
+      image: 'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?w=500&q=80',
       originalPrice: 299.00,
       price: 219.00,
       discount: 26,
-      storeName: 'JBL Oficial',
+      storeName: 'Loja Oficial',
       permalink: 'https://www.mercadolivre.com.br/'
     }
   ];
 
   async function fetchProducts() {
     setLoading(true);
-    
-    // Simulamos um tempo de carregamento de 1 segundo para manter a animação bonitinha
     setTimeout(() => {
       setProducts(mockProducts);
       setCurrentPage(1);
       setLoading(false);
-    }, 1000);
+    }, 800); // 0.8 segundos de carregamento para dar uma sensação premium
   }
 
   useEffect(() => {
