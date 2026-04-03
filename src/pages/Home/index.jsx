@@ -17,24 +17,19 @@ export function Home() {
   const [products, setProducts] = useState([]); 
   const [loading, setLoading] = useState(true); 
 
-  // --- ESTRATÉGIA ATIVADA: BACKEND INTELIGENTE (VERCEL KV) ---
   async function fetchProducts() {
     setLoading(true);
     try {
-      console.log("🔍 Solicitando Curadoria VIP ao servidor...");
+      console.log("🔍 Buscando vitrine automatizada...");
 
-      // Faz a chamada para a nossa API na Vercel (que cuida do token automaticamente)
       const response = await fetch('/api/items');
-      
       if (!response.ok) throw new Error(`Erro na API: ${response.status}`);
 
       const data = await response.json();
       
-      // Proteção anti-tela branca e formatação dos dados do Mercado Livre
-      if (data && Array.isArray(data) && data.length > 0) {
-        const formattedProducts = data.map(item => {
-          const produto = item.body;
-          
+      // A Busca Dinâmica retorna os produtos dentro de "data.results"
+      if (data && data.results && data.results.length > 0) {
+        const formattedProducts = data.results.map(produto => {
           if (!produto || !produto.id || produto.price === undefined) return null;
 
           return {
@@ -44,7 +39,8 @@ export function Home() {
             originalPrice: produto.original_price,
             price: produto.price,
             discount: produto.original_price ? Math.round(((produto.original_price - produto.price) / produto.original_price) * 100) : null,
-            storeName: "Loja Oficial",
+            // A API de busca às vezes informa o nome da loja oficial, se não, usamos um padrão
+            storeName: produto.official_store_name || "Loja Parceira",
             permalink: produto.permalink
           };
         }).filter(Boolean); 
@@ -55,7 +51,7 @@ export function Home() {
       }
 
     } catch (error) {
-      console.error("❌ Erro crítico ao carregar vitrine:", error);
+      console.error("❌ Erro ao carregar vitrine automatizada:", error);
       setProducts([]); 
     } finally {
       setLoading(false);
