@@ -17,26 +17,26 @@ export function Home() {
   const [products, setProducts] = useState([]); 
   const [loading, setLoading] = useState(true); 
   
-  // NOVOS ESTADOS: Controle total do termo de busca e totalizador do ML
   const [searchQuery, setSearchQuery] = useState(''); 
   const [totalProducts, setTotalProducts] = useState(0); 
 
   async function fetchProducts() {
     setLoading(true);
     try {
-      // Calcula o pulo (Ex: se está na página 2 de 12 em 12, ele pula os 12 primeiros = offset 12)
       const offset = (currentPage - 1) * itemsPerPage;
       
-      // Monta o pedido exato para o nosso Backend Inteligente
-      let url = `/api/items?limit=${itemsPerPage}&offset=${offset}`;
+      // A MÁGICA: O navegador do usuário faz o pedido direto para o ML, burlando o bloqueio de Data Centers!
+      let url = `https://api.mercadolibre.com/sites/MLB/search?category=MLB1648&sort=sold_quantity&limit=${itemsPerPage}&offset=${offset}`;
+      
       if (searchQuery) {
-        url += `&q=${encodeURIComponent(searchQuery)}`;
+        url = `https://api.mercadolibre.com/sites/MLB/search?q=${encodeURIComponent(searchQuery)}&limit=${itemsPerPage}&offset=${offset}`;
       }
 
-      console.log(`🔍 Buscando URL dinâmica: ${url}`);
+      console.log(`🔍 Buscando direto na fonte: ${url}`);
 
+      // Chamada direta do Front-End
       const response = await fetch(url);
-      if (!response.ok) throw new Error(`Erro na API: ${response.status}`);
+      if (!response.ok) throw new Error(`Erro na API do ML: ${response.status}`);
 
       const data = await response.json();
       
@@ -47,7 +47,8 @@ export function Home() {
           return {
             id: produto.id,
             title: produto.title,
-            image: produto.thumbnail ? produto.thumbnail.replace(/\w\.jpg/g, 'W.jpg') : '', 
+            // Aumenta a qualidade da imagem trocando a letra 'I' (pequena) por 'W' (grande)
+            image: produto.thumbnail ? produto.thumbnail.replace(/-I\.jpg/g, '-W.jpg') : '', 
             originalPrice: produto.original_price,
             price: produto.price,
             discount: produto.original_price ? Math.round(((produto.original_price - produto.price) / produto.original_price) * 100) : null,
@@ -58,7 +59,6 @@ export function Home() {
 
         setProducts(formattedProducts);
         
-        // Puxa o total real de produtos existentes para que os botões "Próxima Página" saibam até onde ir
         if (data.paging && data.paging.total) {
           setTotalProducts(data.paging.total);
         } else {
@@ -79,22 +79,19 @@ export function Home() {
     }
   }
 
-  // A mágica: Se a página mudar, ou a qtde por página mudar, ou a busca mudar... RECARREGA SOZINHO!
   useEffect(() => {
     fetchProducts();
   }, [currentPage, itemsPerPage, searchQuery]);
 
-  // Função disparada quando alguém digita e dá Enter lá no topo da Header
   const handleSearch = (query) => {
     setSearchQuery(query);
-    setCurrentPage(1); // Volta para o início para não cair numa página vazia se a busca for restrita
+    setCurrentPage(1); 
   };
 
   const totalPages = itemsPerPage > 0 ? Math.ceil(totalProducts / itemsPerPage) : 0;
 
   return (
     <div className={styles.pageContainer}>
-      {/* O Componente Header recebe nossa função e já controla a pesquisa! */}
       <Header onSearch={handleSearch} />
 
       <Banner />
