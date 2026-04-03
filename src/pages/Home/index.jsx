@@ -16,18 +16,30 @@ export function Home() {
   const [currentPage, setCurrentPage] = useState(1);   
   const [products, setProducts] = useState([]); 
   const [loading, setLoading] = useState(true); 
+  
+  // NOVOS ESTADOS: Controle total do termo de busca e totalizador do ML
+  const [searchQuery, setSearchQuery] = useState(''); 
+  const [totalProducts, setTotalProducts] = useState(0); 
 
   async function fetchProducts() {
     setLoading(true);
     try {
-      console.log("🔍 Buscando vitrine automatizada...");
+      // Calcula o pulo (Ex: se está na página 2 de 12 em 12, ele pula os 12 primeiros = offset 12)
+      const offset = (currentPage - 1) * itemsPerPage;
+      
+      // Monta o pedido exato para o nosso Backend Inteligente
+      let url = `/api/items?limit=${itemsPerPage}&offset=${offset}`;
+      if (searchQuery) {
+        url += `&q=${encodeURIComponent(searchQuery)}`;
+      }
 
-      const response = await fetch('/api/items');
+      console.log(`🔍 Buscando URL dinâmica: ${url}`);
+
+      const response = await fetch(url);
       if (!response.ok) throw new Error(`Erro na API: ${response.status}`);
 
       const data = await response.json();
       
-      // A Busca Dinâmica retorna os produtos dentro de "data.results"
       if (data && data.results && data.results.length > 0) {
         const formattedProducts = data.results.map(produto => {
           if (!produto || !produto.id || produto.price === undefined) return null;
@@ -39,38 +51,51 @@ export function Home() {
             originalPrice: produto.original_price,
             price: produto.price,
             discount: produto.original_price ? Math.round(((produto.original_price - produto.price) / produto.original_price) * 100) : null,
-            // A API de busca às vezes informa o nome da loja oficial, se não, usamos um padrão
             storeName: produto.official_store_name || "Loja Parceira",
             permalink: produto.permalink
           };
         }).filter(Boolean); 
 
         setProducts(formattedProducts);
+        
+        // Puxa o total real de produtos existentes para que os botões "Próxima Página" saibam até onde ir
+        if (data.paging && data.paging.total) {
+          setTotalProducts(data.paging.total);
+        } else {
+          setTotalProducts(formattedProducts.length);
+        }
+
       } else {
         setProducts([]); 
+        setTotalProducts(0);
       }
 
     } catch (error) {
       console.error("❌ Erro ao carregar vitrine automatizada:", error);
       setProducts([]); 
+      setTotalProducts(0);
     } finally {
       setLoading(false);
     }
   }
 
+  // A mágica: Se a página mudar, ou a qtde por página mudar, ou a busca mudar... RECARREGA SOZINHO!
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [currentPage, itemsPerPage, searchQuery]);
 
-  const indexOfLastProduct = Math.max(currentPage * itemsPerPage, 0);
-  const indexOfFirstProduct = Math.max(indexOfLastProduct - itemsPerPage, 0);
-  const displayedProducts = Array.isArray(products) ? products.slice(indexOfFirstProduct, indexOfLastProduct) : [];
+  // Função disparada quando alguém digita e dá Enter lá no topo da Header
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    setCurrentPage(1); // Volta para o início para não cair numa página vazia se a busca for restrita
+  };
 
-  const totalPages = itemsPerPage > 0 ? Math.ceil(products.length / itemsPerPage) : 0;
+  const totalPages = itemsPerPage > 0 ? Math.ceil(totalProducts / itemsPerPage) : 0;
 
   return (
     <div className={styles.pageContainer}>
-      <Header onSearch={() => {}} />
+      {/* O Componente Header recebe nossa função e já controla a pesquisa! */}
+      <Header onSearch={handleSearch} />
 
       <Banner />
 
@@ -84,17 +109,17 @@ export function Home() {
           
           {loading ? (
             <div style={{ textAlign: 'center', padding: '50px', fontSize: '1.2rem', color: '#666' }}>
-              <p>Carregando as melhores ofertas do dia...</p>
+              <p>Carregando as melhores ofertas...</p>
             </div>
           ) : (
             <section className={styles.productsGrid}>
-              {displayedProducts.length > 0 ? (
-                displayedProducts.map(produto => (
+              {products.length > 0 ? (
+                products.map(produto => (
                   <ProductCard key={produto.id} {...produto} />
                 ))
               ) : (
                 <div style={{ textAlign: 'center', gridColumn: 'span 3', padding: '20px' }}>
-                  <p>Nenhum produto encontrado. Verifique a conexão com o servidor.</p>
+                  <p>Nenhum produto encontrado. Busque por outro termo ou limpe os filtros.</p>
                 </div>
               )}
             </section>
