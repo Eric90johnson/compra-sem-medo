@@ -71,4 +71,4 @@ export default async function handler(req, res) {
     console.error("Erro interno no servidor:", error);
     return res.status(500).json({ error: "Erro ao conectar com a API do ML" });
   }
-}
+} 
